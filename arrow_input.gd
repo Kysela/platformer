@@ -6,16 +6,25 @@ export (int) var gravity = 1200
 
 var velocity = Vector2()
 var jumping = false
+var has_double_jumped = false
+
+func PlayerJump():
+	jumping = true
+	velocity.y = jump_speed
+
 
 func get_input():
 	velocity.x = 0
 	var right = Input.is_action_pressed('ui_right')
 	var left = Input.is_action_pressed('ui_left')
-	var jump = Input.is_action_just_pressed('ui_select')
+	var jump = Input.is_action_just_pressed('ui_up')
 
 	if jump and is_on_floor():
-		jumping = true
-		velocity.y = jump_speed
+		PlayerJump()
+		has_double_jumped = false
+	elif jump and !has_double_jumped:
+		PlayerJump()
+		has_double_jumped = true
 	if right:
 		velocity.x += run_speed
 	if left:
